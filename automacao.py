@@ -90,8 +90,8 @@ def IniciarAutomacao():
             options.add_argument('--kiosk-printing')
 
 
-
-           # options.add_argument('--headless')
+            #Função para omitir o navegador
+            #options.add_argument('--headless')
             driver = webdriver.Chrome(executable_path=config.PATH_CONFIG['webDrivePathChrome'], chrome_options=options)
             
             
@@ -211,7 +211,7 @@ def IniciarAutomacao():
                     driver.find_element_by_id('exportCSV').click() 
                     time.sleep(1)
                  
-                    driver.execute_script('window.print();')
+                    #driver.execute_script('window.print();')
 
                     spans = []
                     tfoot = dadosMinAMin.find('tfoot')
@@ -219,11 +219,11 @@ def IniciarAutomacao():
                         spans = foot.find_all('span')
                         
                   
-                    arr.append(str(spans[2].text))
-                    arr.append(str(spans[3].text))
-                    arr.append(str(spans[4].text))
-                    arr.append(str(spans[5].text))
-                    arr.append(str(spans[6].text))
+                    arr.append(str(spans[2].text).replace('.',','))
+                    arr.append(str(spans[3].text).replace('.',','))
+                    arr.append(str(spans[4].text).replace('.',','))
+                    arr.append(str(spans[5].text).replace('.',','))
+                    arr.append(str(spans[6].text).replace('.',','))
                     arrOutput.append(arr)
                     
                     driver.switch_to.window(paginaPrincipal)
@@ -279,18 +279,18 @@ def IniciarAutomacao():
                     driver.find_element_by_id('exportCSV').click()
                     time.sleep(1)
 
-                    driver.execute_script('window.print();')
+                    #driver.execute_script('window.print();')
 
                     spans = []
                     tfoot = dadosMinAMin.find('tfoot')
                     for foot in tfoot:
                         spans = foot.find_all('span')
 
-                    arr.append(str(spans[2].text))
-                    arr.append(str(spans[3].text))
-                    arr.append(str(spans[4].text))
-                    arr.append(str(spans[5].text))
-                    arr.append(str(spans[6].text))
+                    arr.append(str(spans[2].text).replace('.',','))
+                    arr.append(str(spans[3].text).replace('.',','))
+                    arr.append(str(spans[4].text).replace('.',','))
+                    arr.append(str(spans[5].text).replace('.',','))
+                    arr.append(str(spans[6].text).replace('.',','))
                     arrOutput.append(arr)
 
                     driver.switch_to.window(paginaPrincipal)
