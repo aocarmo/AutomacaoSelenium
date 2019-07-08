@@ -60,18 +60,18 @@ def IniciarAutomacao():
                 os.mkdir('./'+nmDiretorioSalvarRelatorio, 0o777)
                 pathRelatorio = config.PATH_CONFIG['pathRelatorio'] + nmDiretorioSalvarRelatorio             
 
-            appState = {
+
+            appState ={
                 "recentDestinations": [
                     {
-                        "id": "Salvar como PDF",
+                        "id": "Save as PDF",
                         "origin": "local"
                     }
                 ],
-                "selectedDestinationId": "Salvar como PDF",
+                "selectedDestinationId": "Save as PDF",
                 "version": 2
             }
-           
-         
+
             
             options = webdriver.ChromeOptions()
             
@@ -84,12 +84,10 @@ def IniciarAutomacao():
              'safebrowsing.disable_download_protection': True,
              "multiple-automatic-downloads" : 1,
              'savefile.default_directory':config.PATH_CONFIG['pathRelatorio'] + nmDiretorioSalvarRelatorio,
-             'printing.print_preview_sticky_settings.appState': json.dumps(appState)
+             'printing.print_preview_sticky_settings.appState': {"recentDestinations": [ {"id": "Save as PDF","origin": "local" } ], "selectedDestinationId": "Save as PDF", "version": 2 }
             })
-                
+
             options.add_argument('--kiosk-printing')
-
-
 
 
 
@@ -151,16 +149,25 @@ def IniciarAutomacao():
             #Abre a planilha
             book = load_workbook(config.PATH_CONFIG['resourcesPath'] + arq)
             sheet = book.active  
-            qtdLinhasPlaniha = sheet.max_row            
-          
+            qtdLinhasPlaniha = sheet.max_row
+
+            horaIniQVP = ""
+            horaFimUniverso = ""
+
             rangeHorarios = sheet['A2': 'D' + str(qtdLinhasPlaniha)]            
             for faixa, programa, c1, c2 in rangeHorarios:
-                arr = []              
+                arr = []
                 arr.append(str(faixa.value))
                 arr.append(str(programa.value))                
              
                 horaInicial = str(c1.value).replace("1899-12-30 ","").split(":")
                 horaFinal = str(c2.value).replace("1899-12-30 ","").split(":")
+
+                if str(programa.value).strip() == "QUE VENHA O POVO":
+                    horaIniQVP = horaInicial
+
+                if str(programa.value).strip() == "UNIVERSO":
+                    horaFimUniverso = horaFinal
                 
                 driver.find_element_by_xpath("//*[@id='menu-container']/div/div/div/div[6]/ol/li[1]/a").click()
                 
@@ -180,7 +187,7 @@ def IniciarAutomacao():
               
                 driver.find_element_by_xpath('//*[@id="menu-container"]/div/div[2]/div/div[2]/ol/li/div/a').click()
             
-                time.sleep(1)
+                time.sleep(2)
 
                 if len(driver.window_handles) == 1:
                     driver.find_element_by_xpath('//*[@id="main"]/div/div/div[8]/div/div/div/form/div/input').click()
@@ -205,8 +212,7 @@ def IniciarAutomacao():
                     time.sleep(1)
                  
                     driver.execute_script('window.print();')
-                    
-                                     
+
                     spans = []
                     tfoot = dadosMinAMin.find('tfoot')
                     for foot in tfoot:
@@ -220,8 +226,75 @@ def IniciarAutomacao():
                     arr.append(str(spans[6].text))
                     arrOutput.append(arr)
                     
-                    driver.switch_to.window(paginaPrincipal) 
-            
+                    driver.switch_to.window(paginaPrincipal)
+
+            if horaIniQVP != "" and horaFimUniverso != "":
+                arr = []
+                arr.append(str(qtdLinhasPlaniha))
+                arr.append(str(qtdLinhasPlaniha))
+
+                horaInicial = horaIniQVP
+                horaFinal = horaFimUniverso
+
+                driver.find_element_by_xpath("//*[@id='menu-container']/div/div/div/div[6]/ol/li[1]/a").click()
+
+                selectHoraInicial = Select(driver.find_element_by_xpath(
+                    '//*[@id="menu-container"]/div/div[2]/div/div[1]/div[1]/div/div[1]/select'))
+                selectMinutoInicial = Select(driver.find_element_by_xpath(
+                    '//*[@id="menu-container"]/div/div[2]/div/div[1]/div[1]/div/div[2]/select'))
+                selectHoraFinal = Select(driver.find_element_by_xpath(
+                    '//*[@id="menu-container"]/div/div[2]/div/div[1]/div[2]/div/div[1]/select'))
+                selectMinutoFinal = Select(driver.find_element_by_xpath(
+                    '//*[@id="menu-container"]/div/div[2]/div/div[1]/div[2]/div/div[2]/select'))
+
+                selectHoraInicial.select_by_value(horaInicial[0])
+                selectMinutoInicial.select_by_value(horaInicial[1])
+
+                selectHoraFinal.select_by_value(horaFinal[0])
+                selectMinutoFinal.select_by_value(horaFinal[1])
+
+                paginaPrincipal = driver.window_handles[0]
+
+                driver.find_element_by_xpath('//*[@id="menu-container"]/div/div[2]/div/div[2]/ol/li/div/a').click()
+
+                time.sleep(2)
+
+                if len(driver.window_handles) == 1:
+                    driver.find_element_by_xpath('//*[@id="main"]/div/div/div[8]/div/div/div/form/div/input').click()
+
+                    time.sleep(1)
+
+                else:
+
+                    popup = driver.window_handles[1]
+
+                    driver.switch_to.window(popup)
+
+                    while AguardarElemento(driver, 'gridTable') == False:
+                        AguardarElemento(driver, 'gridTable')
+
+                    page_source = driver.page_source
+                    dadosMinAMin = BeautifulSoup(page_source, 'lxml')
+
+                    driver.find_element_by_id('exportCSV').click()
+                    time.sleep(1)
+
+                    driver.execute_script('window.print();')
+
+                    spans = []
+                    tfoot = dadosMinAMin.find('tfoot')
+                    for foot in tfoot:
+                        spans = foot.find_all('span')
+
+                    arr.append(str(spans[2].text))
+                    arr.append(str(spans[3].text))
+                    arr.append(str(spans[4].text))
+                    arr.append(str(spans[5].text))
+                    arr.append(str(spans[6].text))
+                    arrOutput.append(arr)
+
+                    driver.switch_to.window(paginaPrincipal)
+
             
             gerarOUTPUT(arrOutput, config.PATH_CONFIG['pathRelatorio'] + nmDiretorioSalvarRelatorio)
             driver.quit()
