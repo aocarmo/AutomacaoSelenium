@@ -32,8 +32,8 @@ import shutil
 import json
 import xlsxwriter
 import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
+#reload(sys)
+#sys.setdefaultencoding('utf-8')
 
 
 
@@ -41,27 +41,27 @@ def IniciarAutomacao():
     
     #lista os arquivos de faixa a serem processados
     arquivos = listar_arquivos(caminho=config.PATH_CONFIG['resourcesPath'])
-    
+
     #loop para pegar todos os arquivos de faixas
     for arq in arquivos:
-        
+
         #Verifica se o arquivo é um xlsx
         if verificarExcel(config.PATH_CONFIG['resourcesPath'] + arq):
 
             nmArqSplit = arq.split('.')
             dataArquivo = nmArqSplit[0].split('_')
-            #Extrai dia mes e ano do nome do arquivo 
+            #Extrai dia mes e ano do nome do arquivo
             diaArquivo = int(dataArquivo[0])
             mesArquivo = int(dataArquivo[1])
             anoArquivo = int(dataArquivo[2])
-            
-            #Cria uma pasta para salvar os arquivos dos relatórios            
-            nmDiretorioSalvarRelatorio = str(diaArquivo)+'_'+str(switch_demo(int(mesArquivo)))+'_'+str(anoArquivo)            
+
+            #Cria uma pasta para salvar os arquivos dos relatórios
+            nmDiretorioSalvarRelatorio = str(diaArquivo)+'_'+str(switch_demo(int(mesArquivo)))+'_'+str(anoArquivo)
             if os.path.exists(config.PATH_CONFIG['pathRelatorio'] + nmDiretorioSalvarRelatorio):
-                shutil.rmtree(config.PATH_CONFIG['pathRelatorio'] + nmDiretorioSalvarRelatorio)                
+                shutil.rmtree(config.PATH_CONFIG['pathRelatorio'] + nmDiretorioSalvarRelatorio)
             else:
                 os.mkdir('./'+nmDiretorioSalvarRelatorio, 0o777)
-                pathRelatorio = config.PATH_CONFIG['pathRelatorio'] + nmDiretorioSalvarRelatorio             
+                pathRelatorio = config.PATH_CONFIG['pathRelatorio'] + nmDiretorioSalvarRelatorio
 
 
             appState ={
@@ -75,9 +75,9 @@ def IniciarAutomacao():
                 "version": 2
             }
 
-            
+
             options = webdriver.ChromeOptions()
-            
+
             options.add_experimental_option("prefs", {
              "download.default_directory": config.PATH_CONFIG['pathRelatorio'] + nmDiretorioSalvarRelatorio,
              "download.prompt_for_download": False,
@@ -96,43 +96,43 @@ def IniciarAutomacao():
             #Função para omitir o navegador
             #options.add_argument('--headless')
             driver = webdriver.Chrome(executable_path=config.PATH_CONFIG['webDrivePathChrome'], chrome_options=options)
-            
+
             username = config.REAL_TIME_CONFIG['user']
             password =  config.REAL_TIME_CONFIG['password']
             getdriver = config.REAL_TIME_CONFIG['url']
             driver.get(getdriver)
-            
+
             #Seta login e senha
             driver.find_element_by_name('username').send_keys(username)
             driver.find_element_by_name('password').send_keys(password)
-        
+
             #pega todo html da pagina para extrair a pergunta do captcha
             soup = BeautifulSoup(driver.page_source, 'lxml')
-        
+
             # Pegar todo o texto da div legend e pega a pergunta do captcha
-            legend = soup.find_all('legend',text=True)    
-            perguntaSplit  = legend[1].text.split(' ')    
+            legend = soup.find_all('legend',text=True)
+            perguntaSplit  = legend[1].text.split(' ')
             soma = int(perguntaSplit[2]) + int(perguntaSplit[4])
-           
+
             #Escolhe o a resposta e marca o termos de uso e entra
             driver.find_element_by_xpath('//span[text()="'+str(soma)+'"]').click()
             driver.find_element_by_xpath('//*[@id="main"]/div/div/div/div/form/fieldset[3]/div/div/label/i').click()
             driver.find_element_by_xpath('//*[@id="main"]/div/div/div/div/form/div/div/input').click()
-            
+
             #aguarda ate que a pagina seja carregada
             element = WebDriverWait(driver, 100).until(
                 EC.presence_of_element_located((By.XPATH, '//*[@id="main"]/div/div/menu/div[3]/button[2]/span[1]'))
-            )   
-            
-            
+            )
+
+
             indexArrOutPut = 0
-            arrOutput = [] 
+            arrOutput = []
             arr = ['FAIXA', 'PROGRAMA', 'ARATU', 'RECORD TV ITAPOAN', 'TV BAND', 'BAHIA', 'TOTAL LIGADOS']
             arrOutput.append(arr)
-            
+
             escolherData(driver,arq)
-                
-           
+
+
             #Abre o menu
             driver.find_element_by_xpath("//button[contains(@type, 'menuToggle')]").click()
 
@@ -199,11 +199,11 @@ def IniciarAutomacao():
                     for foot in tfoot:
                         spans = foot.find_all('span')
 
-                    arr.append(str(spans[2].text).replace('.', ','))
-                    arr.append(str(spans[3].text).replace('.', ','))
-                    arr.append(str(spans[4].text).replace('.', ','))
-                    arr.append(str(spans[5].text).replace('.', ','))
-                    arr.append(str(spans[6].text).replace('.', ','))
+                    arr.append(str(spans[2].text))
+                    arr.append(str(spans[3].text))
+                    arr.append(str(spans[4].text))
+                    arr.append(str(spans[5].text))
+                    arr.append(str(spans[6].text))
                     arrOutput.append(arr)
 
                     driver.switch_to.window(paginaPrincipal)
@@ -293,27 +293,27 @@ def IniciarAutomacao():
                     
                     driver.switch_to.window(paginaPrincipal)
             '''
-            
+
             gerarOUTPUT(arrOutput, config.PATH_CONFIG['pathRelatorio'] + nmDiretorioSalvarRelatorio  + '/' + 'output_' + str(dataArquivo[0]) + '_' + str(dataArquivo[1]) + '_' +  str(dataArquivo[2]) +'.xlsx')
             driver.quit()
 
 def gerarOUTPUT(dados, path):
-    
+
     # Create a workbook and add a worksheet.
     workbook = xlsxwriter.Workbook(path)
     worksheet = workbook.add_worksheet()
-    
+
     row = 0
-   
-    
+
+
     for linha in dados:
         col = 0
         for coluna in linha:
             worksheet.write(row, col, coluna)
             col += 1
-        
+
         row += 1
-            
+
     workbook.close()
 
 
@@ -332,73 +332,66 @@ def obterFaixas(path):
 
     horaIniQVP = None
     horaFimUniverso = None
-
+    i = 1
     for faixa, programa, c1, c2 in rangeHorarios:
         arr = []
 
 
-        if int(faixa.value) == 25:
-            arr.append("33")
-            arr.append("Local_3")
+        if str(programa.value).strip() == "Local_3":
+            arr.append(0)
+            arr.append(str(programa.value))
             arr.append(str(c1.value))
             arr.append(str(c2.value))
             faixas[8] = arr
-        elif int(faixa.value) == 26:
-            arr.append("26")
-            arr.append("Local_2")
+        elif str(programa.value).strip() == "Local_2":
+            arr.append(0)
+            arr.append(str(programa.value))
             arr.append(str(c1.value))
             arr.append(str(c2.value))
             faixas[1] = arr
-        elif int(faixa.value) == 27:
-            arr.append("27")
-            arr.append("Geral_dia")
+        elif str(programa.value).strip() == "Geral_dia":
+            arr.append(0)
+            arr.append(str(programa.value))
             arr.append(str(c1.value))
             arr.append(str(c2.value))
             faixas[2] = arr
-        elif int(faixa.value) == 28:
-            arr.append("28")
-            arr.append("Geral_24")
+        elif str(programa.value).strip() == "Geral_24h":
+            arr.append(0)
+            arr.append(str(programa.value))
             arr.append(str(c1.value))
             arr.append(str(c2.value))
             faixas[3] = arr
-        elif int(faixa.value) == 29:
-            arr.append("29")
-            arr.append("Matutino")
+        elif str(programa.value).strip() == "Matutino":
+            arr.append(0)
+            arr.append(str(programa.value))
             arr.append(str(c1.value))
             arr.append(str(c2.value))
             faixas[4] = arr
-        elif int(faixa.value) == 30:
-            arr.append("30")
-            arr.append("Vespertino")
+        elif str(programa.value).strip() == "Vespertino":
+            arr.append(0)
+            arr.append(str(programa.value))
             arr.append(str(c1.value))
             arr.append(str(c2.value))
             faixas[5] = arr
-        elif int(faixa.value) == 31:
-            arr.append("31")
-            arr.append("Noturno")
+        elif str(programa.value).strip()  == "Noturno":
+            arr.append(0)
+            arr.append(str(programa.value))
             arr.append(str(c1.value))
             arr.append(str(c2.value))
             faixas[6] = arr
-        elif int(faixa.value) == 32:
-            arr.append("32")
-            arr.append("Madrugada")
+        elif str(programa.value).strip() == "Madrugada":
+            arr.append(0)
+            arr.append(str(programa.value))
             arr.append(str(c1.value))
             arr.append(str(c2.value))
             faixas[7] = arr
-        elif int(faixa.value) < 25:
+        else:
             arr.append(str(faixa.value))
             arr.append(str(programa.value))
             arr.append(str(c1.value))
             arr.append(str(c2.value))
             programas.append(arr)
-        else:
-            arr.append(str(int(faixa.value) + 1))
-            arr.append(str(programa.value))
-            arr.append(str(c1.value))
-            arr.append(str(c2.value))
-            faixasExtras.append(arr)
-
-
+            i = i + 1
 
         if str(programa.value).strip() == "QUE VENHA O POVO":
             horaIniQVP = str(c1.value)
@@ -408,22 +401,23 @@ def obterFaixas(path):
 
     if (horaIniQVP is not None) and (horaFimUniverso is not None):
         arr = []
-        arr.append("25")
+        arr.append(0)
         arr.append("Local_1")
         arr.append(horaIniQVP)
         arr.append(horaFimUniverso)
         faixas[0] = arr
+
+
+    for faixa in faixas:
+        faixa[0] = i
+        i = i + 1
+
 
     for programa in programas:
         arrFaixasProgramas.append(programa)
 
     for faixa in faixas:
         arrFaixasProgramas.append(faixa)
-
-    if faixasExtras != []:
-        for faixaExtra in faixasExtras:
-            arrFaixasProgramas.append(faixaExtra)
-
 
 
     return arrFaixasProgramas
@@ -433,55 +427,55 @@ def obterFaixas(path):
 
 
 def escolherData(driver, arq):
-  
-    
+
+
     nmArqSplit = arq.split('.')
     dataArquivo = nmArqSplit[0].split('_')
-    #Extrai dia mes e ano do nome do arquivo 
+    #Extrai dia mes e ano do nome do arquivo
     diaArquivo = int(dataArquivo[0])
     mesArquivo = int(dataArquivo[1])
     anoArquivo = int(dataArquivo[2])
-    
-    
-    #Abre o calendário            
+
+
+    #Abre o calendário
     driver.find_element_by_xpath('//*[@id="main"]/div/div/menu/div[2]/button/span').click()
-    
+
     #Escolhe uma data qualquer so pra fazer o calendario funcioinar
     driver.find_element_by_xpath("//*[@id='rowPanelDrawer']/div[1]/ol/div/div/div[2]/div[3]/div[1]/div[1]").click()
     time.sleep(3)
-    
-    
+
+
     #Verifica qual o mes e ano selecionado no calendario
-    tituloCalendario = driver.find_element_by_xpath('//*[@id="rowPanelDrawer"]/div[1]/ol/div/div/div[2]/div[1]')            
+    tituloCalendario = driver.find_element_by_xpath('//*[@id="rowPanelDrawer"]/div[1]/ol/div/div/div[2]/div[1]')
     mesAnoSistema  = tituloCalendario.text.split(" ");
-    
+
       #Enquanto o mes e ano não for igual ao do arquivo, volta a data no calendario
     while(int(mesAnoSistema[1]) != anoArquivo):
-       
-        if(anoArquivo > int(mesAnoSistema[1])):        
+
+        if(anoArquivo > int(mesAnoSistema[1])):
             driver.find_element_by_xpath("//*[@id='rowPanelDrawer']/div[1]/ol/div/div/div[1]/span[2]").click()
         else:
             driver.find_element_by_xpath("//*[@id='rowPanelDrawer']/div[1]/ol/div/div/div[1]/span[1]").click()
-        
-        tituloCalendario = driver.find_element_by_xpath('//*[@id="rowPanelDrawer"]/div[1]/ol/div/div/div[2]/div[1]')        
+
+        tituloCalendario = driver.find_element_by_xpath('//*[@id="rowPanelDrawer"]/div[1]/ol/div/div/div[2]/div[1]')
         mesAnoSistema  = tituloCalendario.text.split(" ");
-            
+
     while(str(mesAnoSistema[0]) != str(switch_demo(mesArquivo))):
-           
+
         numMesSistema = obterNumeroMes(str(mesAnoSistema[0]))
-        
-        if(mesArquivo > int(numMesSistema)):  
-            driver.find_element_by_xpath("//*[@id='rowPanelDrawer']/div[1]/ol/div/div/div[1]/span[2]").click()            
+
+        if(mesArquivo > int(numMesSistema)):
+            driver.find_element_by_xpath("//*[@id='rowPanelDrawer']/div[1]/ol/div/div/div[1]/span[2]").click()
         else:
             driver.find_element_by_xpath("//*[@id='rowPanelDrawer']/div[1]/ol/div/div/div[1]/span[1]").click()
-        
-        
-        tituloCalendario = driver.find_element_by_xpath('//*[@id="rowPanelDrawer"]/div[1]/ol/div/div/div[2]/div[1]')        
+
+
+        tituloCalendario = driver.find_element_by_xpath('//*[@id="rowPanelDrawer"]/div[1]/ol/div/div/div[2]/div[1]')
         mesAnoSistema  = tituloCalendario.text.split(" ");
-               
-    
-    
-    
+
+
+
+
     #Ao chegar no mes e ano correto escolhe a data
     driver.find_element_by_xpath("//div[text()='"+str(diaArquivo)+"' and contains(@class, 'DayPicker-Day')]").click()
     time.sleep(3)
@@ -495,19 +489,19 @@ def verificarExistenciaElementoByXPATH(driver,xpath):
          return True
     except NoSuchElementException:
         return False
-    
-    
+
+
 def AguardarElemento(driver, Id):
-    
+
     try:
         WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.ID, Id)))
         return True
     except TimeoutException:
         return False
 
-    
+
 def VerifcarAlert(driver):
-    
+
     try:
         WebDriverWait(driver, 1).until(EC.alert_is_present())
         return True
@@ -515,7 +509,7 @@ def VerifcarAlert(driver):
         return False
 
 
-            
+
 def listar_arquivos(caminho=None):
     lista_arqs = [arq for arq in listdir(caminho)]
     return lista_arqs
@@ -526,7 +520,7 @@ def verificarExcel(filename):
     except XLRDError:
         return False
     else:
-        return True    
+        return True
 
 def switch_demo(argument):
     switcher = {
@@ -566,4 +560,4 @@ def obterNumeroMes (argument):
 
 
 IniciarAutomacao()
-#obterFaixas()
+#obterFaixas(config.PATH_CONFIG['resourcesPath'] + "08_07_2019.xlsx")
