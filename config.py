@@ -8,9 +8,14 @@ Created on Tue Jul  2 16:38:20 2019
 
 PATH_CONFIG = {
     'webDrivePathChrome': r'C:\Projetos\Python\TvAratuRealTimeAutomacao\Tvaraturealtimeautomacao\driver\chromedriver.exe',
-    'webDrivePathFireFox': r'C:\Projetos\Python\TvAratuRealTimeAutomacao\Tvaraturealtimeautomacao\driver\geckodriver.exe',
     'resourcesPath': 'C:\Projetos\Python\TvAratuRealTimeAutomacao\Tvaraturealtimeautomacao\Resources\\',
     'pathRelatorio': 'C:\Projetos\Python\TvAratuRealTimeAutomacao\Tvaraturealtimeautomacao\\',
+}
+
+PATH_CONFIG_MAC = {
+    'webDrivePathChrome': '/Users/alex/Documents/Projetos/AutomacaoRealTimeTvAratu/tvaraturealtimeautomacao/driver/chromedriver',
+    'resourcesPath': '/Users/alex/Documents/Projetos/AutomacaoRealTimeTvAratu/tvaraturealtimeautomacao/Resources/',
+    'pathRelatorio': '/Users/alex/Documents/Projetos/AutomacaoRealTimeTvAratu/tvaraturealtimeautomacao/',
 }
 
 
