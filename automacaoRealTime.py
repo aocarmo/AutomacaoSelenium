@@ -120,7 +120,7 @@ def IniciarAutomacao():
             driver.find_element_by_xpath('//*[@id="main"]/div/div/div/div/form/div/div/input').click()
 
             #aguarda ate que a pagina seja carregada
-            element = WebDriverWait(driver, 100).until(
+            element = WebDriverWait(driver, 3000).until(
                 EC.presence_of_element_located((By.XPATH, '//*[@id="main"]/div/div/menu/div[3]/button[2]/span[1]'))
             )
 
@@ -150,7 +150,7 @@ def IniciarAutomacao():
 
 
                 driver.find_element_by_xpath("//*[@id='menu-container']/div/div/div/div[6]/ol/li[1]/a").click()
-               
+                time.sleep(1)
 
                 selectHoraInicial = Select(driver.find_element_by_xpath(
                     '//*[@id="menu-container"]/div/div[2]/div/div[1]/div[1]/div/div[1]/select'))
@@ -193,7 +193,7 @@ def IniciarAutomacao():
                     driver.find_element_by_id('exportCSV').click()
                     time.sleep(1)
 
-                    #driver.execute_script('window.print();')
+                    driver.execute_script('window.print();')
 
                     spans = []
                     tfoot = dadosMinAMin.find('tfoot')
