@@ -193,7 +193,7 @@ def IniciarAutomacao():
                     driver.find_element_by_id('exportCSV').click()
                     time.sleep(1)
 
-                    driver.execute_script('window.print();')
+                    #driver.execute_script('window.print();')
 
                     spans = []
                     tfoot = dadosMinAMin.find('tfoot')
@@ -303,8 +303,6 @@ def obterFaixas(path):
                 arr.append(str(c2.value))
                 faixas[7] = arr
             else:
-                if str(programa.value).strip() == "LIGA DA MADRUGA":
-                    print("aqui");
                 arr.append(str(faixa.value))
                 arr.append(str(programa.value))
                 arr.append(str(c1.value))
