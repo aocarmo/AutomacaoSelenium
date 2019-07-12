@@ -150,6 +150,7 @@ def IniciarAutomacao():
 
 
                 driver.find_element_by_xpath("//*[@id='menu-container']/div/div/div/div[6]/ol/li[1]/a").click()
+               
 
                 selectHoraInicial = Select(driver.find_element_by_xpath(
                     '//*[@id="menu-container"]/div/div[2]/div/div[1]/div[1]/div/div[1]/select'))
@@ -251,68 +252,71 @@ def obterFaixas(path):
     for faixa, programa, c1, c2 in rangeHorarios:
         arr = []
 
+        if faixa.value != None:
 
-        if str(programa.value).strip() == "Local_3":
-            arr.append(0)
-            arr.append(str(programa.value))
-            arr.append(str(c1.value))
-            arr.append(str(c2.value))
-            faixas[8] = arr
-        elif str(programa.value).strip() == "Local_2":
-            arr.append(0)
-            arr.append(str(programa.value))
-            arr.append(str(c1.value))
-            arr.append(str(c2.value))
-            faixas[1] = arr
-        elif str(programa.value).strip() == "Geral_dia":
-            arr.append(0)
-            arr.append(str(programa.value))
-            arr.append(str(c1.value))
-            arr.append(str(c2.value))
-            faixas[2] = arr
-        elif str(programa.value).strip() == "Geral_24h":
-            arr.append(0)
-            arr.append(str(programa.value))
-            arr.append(str(c1.value))
-            arr.append(str(c2.value))
-            faixas[3] = arr
-        elif str(programa.value).strip() == "Matutino":
-            arr.append(0)
-            arr.append(str(programa.value))
-            arr.append(str(c1.value))
-            arr.append(str(c2.value))
-            faixas[4] = arr
-        elif str(programa.value).strip() == "Vespertino":
-            arr.append(0)
-            arr.append(str(programa.value))
-            arr.append(str(c1.value))
-            arr.append(str(c2.value))
-            faixas[5] = arr
-        elif str(programa.value).strip()  == "Noturno":
-            arr.append(0)
-            arr.append(str(programa.value))
-            arr.append(str(c1.value))
-            arr.append(str(c2.value))
-            faixas[6] = arr
-        elif str(programa.value).strip() == "Madrugada":
-            arr.append(0)
-            arr.append(str(programa.value))
-            arr.append(str(c1.value))
-            arr.append(str(c2.value))
-            faixas[7] = arr
-        else:
-            arr.append(str(faixa.value))
-            arr.append(str(programa.value))
-            arr.append(str(c1.value))
-            arr.append(str(c2.value))
-            programas.append(arr)
-            i = i + 1
+            if str(programa.value).strip() == "Local_3":
+                arr.append(0)
+                arr.append(str(programa.value))
+                arr.append(str(c1.value))
+                arr.append(str(c2.value))
+                faixas[8] = arr
+            elif str(programa.value).strip() == "Local_2":
+                arr.append(0)
+                arr.append(str(programa.value))
+                arr.append(str(c1.value))
+                arr.append(str(c2.value))
+                faixas[1] = arr
+            elif str(programa.value).strip() == "Geral_dia":
+                arr.append(0)
+                arr.append(str(programa.value))
+                arr.append(str(c1.value))
+                arr.append(str(c2.value))
+                faixas[2] = arr
+            elif str(programa.value).strip() == "Geral_24h":
+                arr.append(0)
+                arr.append(str(programa.value))
+                arr.append(str(c1.value))
+                arr.append(str(c2.value))
+                faixas[3] = arr
+            elif str(programa.value).strip() == "Matutino":
+                arr.append(0)
+                arr.append(str(programa.value))
+                arr.append(str(c1.value))
+                arr.append(str(c2.value))
+                faixas[4] = arr
+            elif str(programa.value).strip() == "Vespertino":
+                arr.append(0)
+                arr.append(str(programa.value))
+                arr.append(str(c1.value))
+                arr.append(str(c2.value))
+                faixas[5] = arr
+            elif str(programa.value).strip()  == "Noturno":
+                arr.append(0)
+                arr.append(str(programa.value))
+                arr.append(str(c1.value))
+                arr.append(str(c2.value))
+                faixas[6] = arr
+            elif str(programa.value).strip() == "Madrugada":
+                arr.append(0)
+                arr.append(str(programa.value))
+                arr.append(str(c1.value))
+                arr.append(str(c2.value))
+                faixas[7] = arr
+            else:
+                if str(programa.value).strip() == "LIGA DA MADRUGA":
+                    print("aqui");
+                arr.append(str(faixa.value))
+                arr.append(str(programa.value))
+                arr.append(str(c1.value))
+                arr.append(str(c2.value))
+                programas.append(arr)
+                i = i + 1
 
-        if str(programa.value).strip() == "QUE VENHA O POVO":
-            horaIniQVP = str(c1.value)
+            if str(programa.value).strip() == "QUE VENHA O POVO":
+                horaIniQVP = str(c1.value)
 
-        if str(programa.value).strip() == "UNIVERSO":
-            horaFimUniverso = str(c2.value)
+            if str(programa.value).strip() == "UNIVERSO":
+                horaFimUniverso = str(c2.value)
 
     if (horaIniQVP is not None) and (horaFimUniverso is not None):
         arr = []
@@ -333,6 +337,7 @@ def obterFaixas(path):
 
     for faixa in faixas:
         arrFaixasProgramas.append(faixa)
+
 
 
     return arrFaixasProgramas
@@ -475,4 +480,4 @@ def obterNumeroMes (argument):
 
 
 IniciarAutomacao()
-#obterFaixas(config.PATH_CONFIG['resourcesPath'] + "08_07_2019.xlsx")
+#obterFaixas(config.PATH_CONFIG['resourcesPath'] + "10_07_2019.xlsx")
