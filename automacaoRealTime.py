@@ -127,7 +127,7 @@ def IniciarAutomacao():
 
             indexArrOutPut = 0
             arrOutput = []
-            arr = ['FAIXA', 'PROGRAMA', 'ARATU', 'RECORD TV ITAPOAN', 'TV BAND', 'BAHIA', 'TOTAL LIGADOS']
+            arr = ['FAIXA', 'PROGRAMA', 'ARATU', 'RECORD TV ITAPOAN', 'TV BAND', 'BAHIA', 'TOTAL LIGADOS', 'REDE TV!', 'TVE BAHIA', 'REDE BRASIL', 'TOTAL LIGADOS ESPECIAL']
             arrOutput.append(arr)
 
             escolherData(driver,arq)
@@ -193,7 +193,7 @@ def IniciarAutomacao():
                     driver.find_element_by_id('exportCSV').click()
                     time.sleep(1)
 
-                    driver.execute_script('window.print();')
+                    #driver.execute_script('window.print();')
 
                     spans = []
                     tfoot = dadosMinAMin.find('tfoot')
@@ -205,6 +205,12 @@ def IniciarAutomacao():
                     arr.append(str(spans[4].text))
                     arr.append(str(spans[5].text))
                     arr.append(str(spans[6].text))
+                    arr.append(str(spans[7].text))
+                    arr.append(str(spans[8].text))
+                    arr.append(str(spans[9].text))
+                    arr.append(str(spans[10].text))
+
+
                     arrOutput.append(arr)
 
                     driver.switch_to.window(paginaPrincipal)
