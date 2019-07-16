@@ -248,66 +248,86 @@ def obterFaixas(path):
     rangeHorarios = sheet['A2': 'D' + str(qtdLinhasPlaniha)]
 
     arrFaixasProgramas = []
-    faixas = [1,1,1,1,1,1,1,1,1]
+    faixas = []
     programas = []
-    faixasExtras = []
+
 
     horaIniQVP = None
     horaFimUniverso = None
     i = 1
+
+    for faixa, programa, c1, c2 in rangeHorarios:
+
+        if str(programa.value).strip() == "QUE VENHA O POVO":
+            horaIniQVP = str(c1.value)
+
+        if str(programa.value).strip() == "UNIVERSO":
+            horaFimUniverso = str(c2.value)
+
+    if (horaIniQVP is not None) and (horaFimUniverso is not None):
+        arr = []
+        arr.append(0)
+        arr.append("Local_1")
+        arr.append(horaIniQVP)
+        arr.append(horaFimUniverso)
+        faixas.append(arr)
+
+
+
+
     for faixa, programa, c1, c2 in rangeHorarios:
         arr = []
 
         if faixa.value != None:
 
-            if str(programa.value).strip() == "Local_3":
+            if str(programa.value).strip() == "Local_2":
                 arr.append(0)
                 arr.append(str(programa.value))
                 arr.append(str(c1.value))
                 arr.append(str(c2.value))
-                faixas[8] = arr
-            elif str(programa.value).strip() == "Local_2":
-                arr.append(0)
-                arr.append(str(programa.value))
-                arr.append(str(c1.value))
-                arr.append(str(c2.value))
-                faixas[1] = arr
+                faixas.append(arr)
             elif str(programa.value).strip() == "Geral_dia":
                 arr.append(0)
                 arr.append(str(programa.value))
                 arr.append(str(c1.value))
                 arr.append(str(c2.value))
-                faixas[2] = arr
+                faixas.append(arr)
             elif str(programa.value).strip() == "Geral_24h":
                 arr.append(0)
                 arr.append(str(programa.value))
                 arr.append(str(c1.value))
                 arr.append(str(c2.value))
-                faixas[3] = arr
+                faixas.append(arr)
             elif str(programa.value).strip() == "Matutino":
                 arr.append(0)
                 arr.append(str(programa.value))
                 arr.append(str(c1.value))
                 arr.append(str(c2.value))
-                faixas[4] = arr
+                faixas.append(arr)
             elif str(programa.value).strip() == "Vespertino":
                 arr.append(0)
                 arr.append(str(programa.value))
                 arr.append(str(c1.value))
                 arr.append(str(c2.value))
-                faixas[5] = arr
+                faixas.append(arr)
             elif str(programa.value).strip()  == "Noturno":
                 arr.append(0)
                 arr.append(str(programa.value))
                 arr.append(str(c1.value))
                 arr.append(str(c2.value))
-                faixas[6] = arr
+                faixas.append(arr)
             elif str(programa.value).strip() == "Madrugada":
                 arr.append(0)
                 arr.append(str(programa.value))
                 arr.append(str(c1.value))
                 arr.append(str(c2.value))
-                faixas[7] = arr
+                faixas.append(arr)
+            elif str(programa.value).strip() == "Local_3":
+                arr.append(0)
+                arr.append(str(programa.value))
+                arr.append(str(c1.value))
+                arr.append(str(c2.value))
+                faixas.append(arr)
             else:
                 arr.append(str(faixa.value))
                 arr.append(str(programa.value))
@@ -329,6 +349,7 @@ def obterFaixas(path):
         arr.append(horaIniQVP)
         arr.append(horaFimUniverso)
         faixas[0] = arr
+
 
 
     for faixa in faixas:

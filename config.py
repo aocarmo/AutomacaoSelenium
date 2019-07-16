@@ -20,8 +20,8 @@ PATH_CONFIG_MAC = {
 
 
 REAL_TIME_CONFIG = {
-    'user': 'PABLO',
-    'password': 'Pablo*27',
+    'user': 'Renata_Esquivel',
+    'password': 'Minuto$$19',
     'url': 'https://www.realtimebrasil.com/',
    
 }
