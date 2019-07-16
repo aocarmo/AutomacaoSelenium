@@ -102,6 +102,10 @@ def IniciarAutomacao():
             getdriver = config.REAL_TIME_CONFIG['url']
             driver.get(getdriver)
 
+            element = WebDriverWait(driver, 3000).until(
+                EC.presence_of_element_located(
+                    (By.XPATH, '//*[@id="main"]/div/div/div/div/form/fieldset[2]/div/div[1]/label/span'))
+            )
             #Seta login e senha
             driver.find_element_by_name('username').send_keys(username)
             driver.find_element_by_name('password').send_keys(password)
@@ -150,8 +154,10 @@ def IniciarAutomacao():
 
 
                 driver.find_element_by_xpath("//*[@id='menu-container']/div/div/div/div[6]/ol/li[1]/a").click()
+                element = WebDriverWait(driver, 3000).until(
+                    EC.presence_of_element_located((By.XPATH, '//*[@id="menu-container"]/div/div[2]/div/div[1]/div[1]/div/div[1]/select'))
+                )
                 time.sleep(1)
-
                 selectHoraInicial = Select(driver.find_element_by_xpath(
                     '//*[@id="menu-container"]/div/div[2]/div/div[1]/div[1]/div/div[1]/select'))
                 selectMinutoInicial = Select(driver.find_element_by_xpath(
@@ -335,21 +341,6 @@ def obterFaixas(path):
                 arr.append(str(c2.value))
                 programas.append(arr)
                 i = i + 1
-
-            if str(programa.value).strip() == "QUE VENHA O POVO":
-                horaIniQVP = str(c1.value)
-
-            if str(programa.value).strip() == "UNIVERSO":
-                horaFimUniverso = str(c2.value)
-
-    if (horaIniQVP is not None) and (horaFimUniverso is not None):
-        arr = []
-        arr.append(0)
-        arr.append("Local_1")
-        arr.append(horaIniQVP)
-        arr.append(horaFimUniverso)
-        faixas[0] = arr
-
 
 
     for faixa in faixas:
