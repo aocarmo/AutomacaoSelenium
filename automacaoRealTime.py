@@ -154,10 +154,15 @@ def IniciarAutomacao():
 
 
                 driver.find_element_by_xpath("//*[@id='menu-container']/div/div/div/div[6]/ol/li[1]/a").click()
-                element = WebDriverWait(driver, 3000).until(
+                time.sleep(2)
+                '''
+                 element = WebDriverWait(driver, 3000).until(
                     EC.presence_of_element_located((By.XPATH, '//*[@id="menu-container"]/div/div[2]/div/div[1]/div[1]/div/div[1]/select'))
                 )
-                time.sleep(1)
+                '''
+
+
+
                 selectHoraInicial = Select(driver.find_element_by_xpath(
                     '//*[@id="menu-container"]/div/div[2]/div/div[1]/div[1]/div/div[1]/select'))
                 selectMinutoInicial = Select(driver.find_element_by_xpath(
