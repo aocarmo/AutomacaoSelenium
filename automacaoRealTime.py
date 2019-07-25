@@ -154,12 +154,13 @@ def IniciarAutomacao():
 
 
                 driver.find_element_by_xpath("//*[@id='menu-container']/div/div/div/div[6]/ol/li[1]/a").click()
-                time.sleep(2)
-                '''
-                 element = WebDriverWait(driver, 3000).until(
-                    EC.presence_of_element_located((By.XPATH, '//*[@id="menu-container"]/div/div[2]/div/div[1]/div[1]/div/div[1]/select'))
+               # time.sleep(2)
+
+                element = WebDriverWait(driver, 3000).until(
+                    EC.presence_of_element_located(
+                        (By.XPATH, '//h1[text()="Enviar para"]'))
                 )
-                '''
+
 
 
 
@@ -237,7 +238,6 @@ def gerarOUTPUT(dados, path):
     worksheet = workbook.add_worksheet()
 
     row = 0
-
 
     for linha in dados:
         col = 0
