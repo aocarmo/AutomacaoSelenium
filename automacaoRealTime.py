@@ -418,7 +418,7 @@ def escolherData(driver, arq):
 
 
     #Ao chegar no mes e ano correto escolhe a data
-    driver.find_element_by_xpath("//div[text()='"+str(diaArquivo)+"' and contains(@class, 'DayPicker-Day')]").click()
+    driver.find_element_by_xpath("//div[text()='"+str(diaArquivo)+"' and @class='DayPicker-Day']").click()
     time.sleep(3)
 
 
