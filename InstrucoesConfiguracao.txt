@@ -1,0 +1,15 @@
+Implantar robo tv aratu
+1 - Download PyCharm - instalação
+2 - Download python 3.7 - Configurar variais de ambiente
+3 - Instalar Git
+5 - Baixar projeto do git - > Repositorio:  https://gitlab.com/alex.carmo91/TvAratuRealTimeAutomacao.git
+6 - Instalar dependencias
+	 pip install beautifulsoup4iggii
+	pip install -U selenium
+	pip install openpyxl
+	pip install xlrdfiif
+	pip install XlsxWriter
+	pip install lxml
+	pip install pyinstaller
+
+Para gerar o executavel: pyinstaller  nome_do_arquivo
